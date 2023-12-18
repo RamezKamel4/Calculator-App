@@ -1,12 +1,13 @@
 package com.example.calculator;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.button.MaterialButton;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
@@ -16,17 +17,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton buttonC, buttonBrackOpen, buttonBrackClose;
     MaterialButton buttonDivide, buttonMultiply, buttonPlus, buttonMinus, buttonEquals;
     MaterialButton button0, button1, button2, button3, button4, button5, button6, button7, button8, button9;
-    MaterialButton buttonAC, buttonDot;
+    MaterialButton buttonAC, buttonDot, buttonChangeSign, buttonSquareRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         resultTextView = findViewById(R.id.result_tv);
         solutionTextView = findViewById(R.id.solution_tv);
-
 
         assignId(buttonC, R.id.button_c);
         assignId(buttonBrackOpen, R.id.button_open_bracket);
@@ -48,13 +47,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button9, R.id.button_9);
         assignId(buttonAC, R.id.button_ac);
         assignId(buttonDot, R.id.button_dot);
+        assignId(buttonChangeSign, R.id.button_change_sign);
+        assignId(buttonSquareRoot, R.id.button_square_root);
     }
 
     void assignId(MaterialButton btn, int id) {
         btn = findViewById(id);
         btn.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -83,6 +83,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String finalResult = getResult(dataToCalculate);
         if (!finalResult.equals("Err")) {
             resultTextView.setText(finalResult);
+        }
+    }
+
+    private void handleSignChange() {
+        String dataToCalculate = solutionTextView.getText().toString();
+        if (!dataToCalculate.isEmpty() && !dataToCalculate.equals("0")) {
+            double currentValue = Double.parseDouble(dataToCalculate);
+            double newValue = -currentValue;
+            solutionTextView.setText(String.valueOf(newValue));
+        }
+    }
+
+    private void handleSquareRoot() {
+        String dataToCalculate = solutionTextView.getText().toString();
+        if (!dataToCalculate.isEmpty() && !dataToCalculate.equals("0")) {
+            double value = Double.parseDouble(dataToCalculate);
+            if (value >= 0) {
+                double result = Math.sqrt(value);
+                solutionTextView.setText(String.valueOf(result));
+                resultTextView.setText(String.valueOf(result));
+            } else {
+                solutionTextView.setText("Err");
+                resultTextView.setText("Err");
+            }
         }
     }
 
